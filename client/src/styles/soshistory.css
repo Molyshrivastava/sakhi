@@ -1,0 +1,110 @@
+.history-container{
+    max-width:900px;
+    margin:auto;
+    padding:30px;
+}
+
+.history-container h1{
+    text-align:center;
+    margin-bottom:30px;
+    color:#7c3aed;
+}
+
+.history-card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.history-card h3{
+    color:#7c3aed;
+}
+
+.view-btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 20px;
+    background:#7c3aed;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.view-btn:hover{
+    background:#5b21b6;
+}
+
+.history-container{
+    max-width:900px;
+    margin:auto;
+    padding:30px;
+}
+
+.history-container h1{
+    text-align:center;
+    margin-bottom:30px;
+    color:#7c3aed;
+}
+
+.history-card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    transition:.3s;
+}
+
+.history-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.history-card h3{
+    color:#7c3aed;
+    margin-bottom:10px;
+}
+
+.history-card p{
+    margin:8px 0;
+    color:#444;
+}
+
+.action-buttons{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+.view-btn{
+    background:#7c3aed;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+}
+
+.view-btn:hover{
+    background:#5b21b6;
+}
+
+.delete-btn{
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+    transform:scale(1.05);
+}

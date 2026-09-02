@@ -1,0 +1,363 @@
+/* ================================
+   INCIDENT REPORT PAGE
+================================ */
+
+.incident-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 25px 20px 50px;
+  box-sizing: border-box;
+}
+
+/* ================================
+   COMMON CARD
+================================ */
+
+.incident-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eeeeee;
+}
+
+/* ================================
+   REPORT HEADING
+================================ */
+
+.incident-heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.incident-heading-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+  background: #fff1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+  flex-shrink: 0;
+}
+
+.incident-heading h2 {
+  margin: 0 0 5px;
+  font-size: 24px;
+  color: #222;
+}
+
+.incident-heading p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* ================================
+   FORM
+================================ */
+
+.incident-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.incident-form label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 8px;
+}
+
+.incident-form select,
+.incident-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  padding: 13px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: 0.2s ease;
+  background: #fff;
+}
+
+.incident-form select {
+  cursor: pointer;
+}
+
+.incident-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.incident-form select:focus,
+.incident-form textarea:focus {
+  border-color: #e63946;
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+}
+
+/* ================================
+   LOCATION INFO
+================================ */
+
+.location-info {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #666;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* ================================
+   SUBMIT BUTTON
+================================ */
+
+.submit-incident-btn {
+  border: none;
+  border-radius: 11px;
+  padding: 14px;
+  margin-top: 10px;
+  background: #e63946;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.submit-incident-btn:hover {
+  background: #c92f3b;
+  transform: translateY(-1px);
+}
+
+.submit-incident-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ================================
+   HISTORY HEADING
+================================ */
+
+.history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.history-heading h2 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  color: #222;
+}
+
+.history-heading p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.incident-count {
+  min-width: 35px;
+  height: 35px;
+  padding: 0 10px;
+  border-radius: 20px;
+  background: #fff1f1;
+  color: #e63946;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* ================================
+   INCIDENT LIST
+================================ */
+
+.incident-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.incident-history-item {
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
+  padding: 18px;
+  background: #fafafa;
+  transition: 0.2s ease;
+}
+
+.incident-history-item:hover {
+  border-color: #dddddd;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ================================
+   INCIDENT TOP
+================================ */
+
+.incident-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.incident-type {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.incident-date {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* ================================
+   DESCRIPTION
+================================ */
+
+.incident-description {
+  margin: 0 0 12px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* ================================
+   LOCATION
+================================ */
+
+.incident-location {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+/* ================================
+   ACTIONS
+================================ */
+
+.incident-item-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-incident-btn {
+  border: 1px solid #e63946;
+  background: #fff;
+  color: #e63946;
+  border-radius: 8px;
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-incident-btn:hover {
+  background: #e63946;
+  color: white;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.incident-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #777;
+}
+
+.empty-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.incident-empty h3 {
+  margin: 5px 0;
+  color: #444;
+  font-size: 18px;
+}
+
+.incident-empty p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* ================================
+   LOADING
+================================ */
+
+.loading-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #eeeeee;
+  border-top: 3px solid #e63946;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: incident-spin 0.8s linear infinite;
+}
+
+@keyframes incident-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+  .incident-page {
+    padding: 15px 12px 40px;
+  }
+
+  .incident-card {
+    padding: 18px;
+    border-radius: 15px;
+  }
+
+  .incident-heading h2 {
+    font-size: 20px;
+  }
+
+  .incident-heading p {
+    font-size: 13px;
+  }
+
+  .history-heading h2 {
+    font-size: 19px;
+  }
+
+  .incident-item-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .incident-date {
+    white-space: normal;
+  }
+
+  .delete-incident-btn {
+    width: 100%;
+  }
+}

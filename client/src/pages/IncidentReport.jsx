@@ -26,7 +26,7 @@ function IncidentReport() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setIncidents(response.data);
@@ -77,7 +77,7 @@ function IncidentReport() {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            }
+            },
           );
 
           toast.success("✅ Incident Reported Successfully");
@@ -97,7 +97,7 @@ function IncidentReport() {
       () => {
         toast.error("Please allow location access.");
         setSubmitting(false);
-      }
+      },
     );
   };
 
@@ -107,24 +107,21 @@ function IncidentReport() {
   const deleteIncident = async (incidentId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this incident report?\n\n" +
-        "It will also be removed from the Community Safety Map."
+        "It will also be removed from the Community Safety Map.",
     );
 
     if (!confirmed) return;
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/incidents/${incidentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`http://localhost:5000/api/incidents/${incidentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       // Immediately remove it from the history UI
       setIncidents((prev) =>
-        prev.filter((incident) => incident._id !== incidentId)
+        prev.filter((incident) => incident._id !== incidentId),
       );
 
       toast.success("🗑️ Incident deleted successfully");
@@ -151,7 +148,6 @@ function IncidentReport() {
 
   return (
     <div className="incident-page">
-
       {/* =========================
           REPORT INCIDENT
       ========================= */}
@@ -161,20 +157,14 @@ function IncidentReport() {
 
           <div>
             <h2>Report an Incident</h2>
-            <p>
-              Help keep your community safe by reporting unsafe incidents.
-            </p>
+            <p>Help keep your community safe by reporting unsafe incidents.</p>
           </div>
         </div>
 
         <div className="incident-form">
-
           <label>Incident Type</label>
 
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
+          <select value={type} onChange={(e) => setType(e.target.value)}>
             <option>Harassment</option>
             <option>Stalking</option>
             <option>Theft</option>
@@ -210,18 +200,13 @@ function IncidentReport() {
           INCIDENT HISTORY
       ========================= */}
       <div className="incident-card history-card">
-
         <div className="history-heading">
           <div>
             <h2>📋 My Reported Incidents</h2>
-            <p>
-              View and manage incidents you have reported.
-            </p>
+            <p>View and manage incidents you have reported.</p>
           </div>
 
-          <span className="incident-count">
-            {incidents.length}
-          </span>
+          <span className="incident-count">{incidents.length}</span>
         </div>
 
         {loadingIncidents ? (
@@ -233,57 +218,37 @@ function IncidentReport() {
           <div className="incident-empty">
             <div className="empty-icon">📋</div>
             <h3>No incidents reported</h3>
-            <p>
-              Your reported incidents will appear here.
-            </p>
+            <p>Your reported incidents will appear here.</p>
           </div>
         ) : (
           <div className="incident-list">
-
             {incidents.map((incident) => (
-              <div
-                className="incident-history-item"
-                key={incident._id}
-              >
-
+              <div className="incident-history-item" key={incident._id}>
                 <div className="incident-item-top">
-
-                  <div className="incident-type">
-                    🚨 {incident.type}
-                  </div>
+                  <div className="incident-type">🚨 {incident.type}</div>
 
                   <div className="incident-date">
                     {formatDate(incident.createdAt)}
                   </div>
-
                 </div>
 
-                <p className="incident-description">
-                  {incident.description}
-                </p>
+                <p className="incident-description">{incident.description}</p>
 
-                <div className="incident-location">
-                  📍 Location recorded
-                </div>
+                <div className="incident-location">📍 Location recorded</div>
 
                 <div className="incident-item-actions">
-
                   <button
                     className="delete-incident-btn"
                     onClick={() => deleteIncident(incident._id)}
                   >
                     🗑️ Delete
                   </button>
-
                 </div>
-
               </div>
             ))}
-
           </div>
         )}
       </div>
-
     </div>
   );
 }

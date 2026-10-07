@@ -30,8 +30,8 @@ function SafeRoute() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [destinationCoords, setDestinationCoords] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
-const [safetyScore, setSafetyScore] = useState("--");
-const [incidentCount, setIncidentCount] = useState(0);
+  const [safetyScore, setSafetyScore] = useState("--");
+  const [incidentCount, setIncidentCount] = useState(0);
   const [route, setRoute] = useState([]);
   const [distance, setDistance] = useState("--");
   const [duration, setDuration] = useState("--");
@@ -45,9 +45,8 @@ const [incidentCount, setIncidentCount] = useState(0);
         });
       },
       () => {
-       
         toast.error("Please allow location access.");
-      }
+      },
     );
   }, []);
 
@@ -63,7 +62,7 @@ const [incidentCount, setIncidentCount] = useState(0);
       const res = await fetch(
         `https://api.openrouteservice.org/geocode/search?api_key=${
           import.meta.env.VITE_ORS_API_KEY
-        }&text=${encodeURIComponent(value)}&boundary.country=IND`
+        }&text=${encodeURIComponent(value)}&boundary.country=IND`,
       );
 
       const data = await res.json();
@@ -74,108 +73,99 @@ const [incidentCount, setIncidentCount] = useState(0);
   };
 
   const findRoute = async () => {
+    if (!currentLocation || !destinationCoords) {
+      return toast.error("Select a destination first.");
+    }
 
-  if (!currentLocation || !destinationCoords) {
-    return toast.error("Select a destination first.");
-  }
-
-  try {
-
-    // Get route
-    const res = await fetch(
-      "https://api.openrouteservice.org/v2/directions/driving-car",
-      {
-        method: "POST",
-        headers: {
-          Authorization: import.meta.env.VITE_ORS_API_KEY,
-          "Content-Type": "application/json",
+    try {
+      // Get route
+      const res = await fetch(
+        "https://api.openrouteservice.org/v2/directions/driving-car",
+        {
+          method: "POST",
+          headers: {
+            Authorization: import.meta.env.VITE_ORS_API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            coordinates: [
+              [currentLocation.lng, currentLocation.lat],
+              [destinationCoords.lng, destinationCoords.lat],
+            ],
+          }),
         },
-        body: JSON.stringify({
-          coordinates: [
-            [currentLocation.lng, currentLocation.lat],
-            [destinationCoords.lng, destinationCoords.lat],
-          ],
-        }),
-      }
-    );
+      );
 
-    const data = await res.json();
+      const data = await res.json();
 
-    // Draw route
-    const coords = polyline.decode(data.routes[0].geometry);
-    setRoute(coords);
+      // Draw route
+      const coords = polyline.decode(data.routes[0].geometry);
+      setRoute(coords);
 
-    // Distance
-    setDistance(
-      (data.routes[0].summary.distance / 1000).toFixed(2) + " km"
-    );
+      // Distance
+      setDistance((data.routes[0].summary.distance / 1000).toFixed(2) + " km");
 
-    // ETA
-    setDuration(
-      Math.round(data.routes[0].summary.duration / 60) + " mins"
-    );
+      // ETA
+      setDuration(Math.round(data.routes[0].summary.duration / 60) + " mins");
 
-    // -----------------------------
-    // FETCH INCIDENTS
-    // -----------------------------
-    const token = localStorage.getItem("token");
+      // -----------------------------
+      // FETCH INCIDENTS
+      // -----------------------------
+      const token = localStorage.getItem("token");
 
-    const incidentRes = await axios.get(
-      "http://localhost:5000/api/incidents/community",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const incidentRes = await axios.get(
+        "http://localhost:5000/api/incidents/community",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      }
-    );
+      );
 
-    const incidents = incidentRes.data;
-console.log("Current Location:", currentLocation);
-console.log("Destination:", destinationCoords);
-console.log("Incidents:", incidents);
-let nearby = 0;
+      const incidents = incidentRes.data;
+      console.log("Current Location:", currentLocation);
+      console.log("Destination:", destinationCoords);
+      console.log("Incidents:", incidents);
+      let nearby = 0;
 
-const minLat = Math.min(currentLocation.lat, destinationCoords.lat);
-const maxLat = Math.max(currentLocation.lat, destinationCoords.lat);
+      const minLat = Math.min(currentLocation.lat, destinationCoords.lat);
+      const maxLat = Math.max(currentLocation.lat, destinationCoords.lat);
 
-const minLng = Math.min(currentLocation.lng, destinationCoords.lng);
-const maxLng = Math.max(currentLocation.lng, destinationCoords.lng);
+      const minLng = Math.min(currentLocation.lng, destinationCoords.lng);
+      const maxLng = Math.max(currentLocation.lng, destinationCoords.lng);
 
-incidents.forEach((incident) => {
-  if (
-    incident.latitude >= minLat &&
-    incident.latitude <= maxLat &&
-    incident.longitude >= minLng &&
-    incident.longitude <= maxLng
-  ) {
-    nearby++;
-  }
-});
+      incidents.forEach((incident) => {
+        if (
+          incident.latitude >= minLat &&
+          incident.latitude <= maxLat &&
+          incident.longitude >= minLng &&
+          incident.longitude <= maxLng
+        ) {
+          nearby++;
+        }
+      });
 
-const score = Math.max(100 - nearby * 15, 10);
+      const score = Math.max(100 - nearby * 15, 10);
 
-setIncidentCount(nearby);
-setSafetyScore(score);
+      setIncidentCount(nearby);
+      setSafetyScore(score);
 
-// Save values for Dashboard
-localStorage.setItem("safetyScore", score);
-localStorage.setItem("incidentCount", nearby);
-
-  } catch (err) {
-    console.log(err);
-  }
-};
+      // Save values for Dashboard
+      localStorage.setItem("safetyScore", score);
+      localStorage.setItem("incidentCount", nearby);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="safe-route-page">
-
       <div className="route-header">
         <h1>🛣 Safe Route</h1>
         <p>Find the safest path to your destination</p>
       </div>
 
       <div className="search-card">
-
         <label>📍 From</label>
         <input value="Current Location" disabled />
 
@@ -210,14 +200,10 @@ localStorage.setItem("incidentCount", nearby);
           </div>
         )}
 
-        <button onClick={findRoute}>
-          Find Safest Route
-        </button>
-
+        <button onClick={findRoute}>Find Safest Route</button>
       </div>
 
       <div className="route-result">
-
         <div className="info-box">
           <h3>⭐ Safety Score</h3>
           <p>{safetyScore}</p>
@@ -237,7 +223,6 @@ localStorage.setItem("incidentCount", nearby);
           <h3>🚨 Incidents Nearby</h3>
           <p>{incidentCount}</p>
         </div>
-
       </div>
 
       <MapContainer
@@ -253,7 +238,6 @@ localStorage.setItem("incidentCount", nearby);
           borderRadius: "20px",
         }}
       >
-
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -263,10 +247,7 @@ localStorage.setItem("incidentCount", nearby);
         {currentLocation && (
           <>
             <CircleMarker
-              center={[
-                currentLocation.lat,
-                currentLocation.lng,
-              ]}
+              center={[currentLocation.lat, currentLocation.lng]}
               radius={10}
               pathOptions={{
                 color: "#2563eb",
@@ -275,12 +256,7 @@ localStorage.setItem("incidentCount", nearby);
               }}
             />
 
-            <Popup
-              position={[
-                currentLocation.lat,
-                currentLocation.lng,
-              ]}
-            >
+            <Popup position={[currentLocation.lat, currentLocation.lng]}>
               📍 Your Current Location
             </Popup>
           </>
@@ -288,15 +264,8 @@ localStorage.setItem("incidentCount", nearby);
 
         {/* Destination */}
         {destinationCoords && (
-          <Marker
-            position={[
-              destinationCoords.lat,
-              destinationCoords.lng,
-            ]}
-          >
-            <Popup>
-              🎯 {destination}
-            </Popup>
+          <Marker position={[destinationCoords.lat, destinationCoords.lng]}>
+            <Popup>🎯 {destination}</Popup>
           </Marker>
         )}
 
@@ -310,13 +279,9 @@ localStorage.setItem("incidentCount", nearby);
             }}
           />
         )}
-
       </MapContainer>
 
-      <button className="start-btn">
-        🚗 Start Navigation
-      </button>
-
+      <button className="start-btn">🚗 Start Navigation</button>
     </div>
   );
 }

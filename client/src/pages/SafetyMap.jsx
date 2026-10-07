@@ -34,7 +34,7 @@ function SafetyMap() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setIncidents(res.data);
@@ -51,7 +51,7 @@ function SafetyMap() {
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
+          attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
@@ -69,9 +69,7 @@ function SafetyMap() {
                 <strong>Status:</strong> {incident.status}
               </p>
 
-              <p>
-                {new Date(incident.createdAt).toLocaleString()}
-              </p>
+              <p>{new Date(incident.createdAt).toLocaleString()}</p>
             </Popup>
           </Marker>
         ))}

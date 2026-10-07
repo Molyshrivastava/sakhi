@@ -22,14 +22,11 @@ function TrustedCircle() {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/contacts",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:5000/api/contacts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setContacts(res.data);
     } catch (error) {
@@ -40,7 +37,6 @@ function TrustedCircle() {
   const handleAdd = async () => {
     try {
       if (!form.name || !form.phone) {
-        
         toast.error("Fill all fields");
         return;
       }
@@ -52,7 +48,7 @@ function TrustedCircle() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       console.log(res.data);
@@ -65,21 +61,18 @@ function TrustedCircle() {
       fetchContacts();
     } catch (error) {
       console.log(error);
-     
+
       toast.error("Failed to add contact");
     }
   };
 
   const deleteContact = async (id) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/contacts/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`http://localhost:5000/api/contacts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       fetchContacts();
     } catch (error) {
@@ -96,7 +89,7 @@ function TrustedCircle() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       fetchContacts();
@@ -110,11 +103,11 @@ function TrustedCircle() {
   }, []);
 
   const sortedContacts = [...contacts].sort(
-    (a, b) => Number(b.favorite) - Number(a.favorite)
+    (a, b) => Number(b.favorite) - Number(a.favorite),
   );
 
   const filteredContacts = sortedContacts.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -138,10 +131,7 @@ function TrustedCircle() {
           onChange={handleChange}
         />
 
-        <button
-          className="primary-btn"
-          onClick={handleAdd}
-        >
+        <button className="primary-btn" onClick={handleAdd}>
           Add Contact
         </button>
       </div>
@@ -150,25 +140,16 @@ function TrustedCircle() {
         className="search"
         placeholder="🔍 Search contacts..."
         value={search}
-        onChange={(e) =>
-          setSearch(e.target.value)
-        }
+        onChange={(e) => setSearch(e.target.value)}
       />
 
       <div className="list">
         {filteredContacts.map((c) => (
-          <div
-            className="contact-card"
-            key={c._id}
-          >
+          <div className="contact-card" key={c._id}>
             <div>
               <h3>
                 {c.name}
-                {c.favorite && (
-                  <span className="star">
-                    ⭐
-                  </span>
-                )}
+                {c.favorite && <span className="star">⭐</span>}
               </h3>
 
               <p>{c.phone}</p>
@@ -176,9 +157,7 @@ function TrustedCircle() {
 
             <div className="actions">
               <a href={`tel:${c.phone}`}>
-                <button className="call">
-                  📞
-                </button>
+                <button className="call">📞</button>
               </a>
 
               <a
@@ -186,25 +165,12 @@ function TrustedCircle() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <button className="wa">
-                  💬
-                </button>
+                <button className="wa">💬</button>
               </a>
 
-              <button
-                onClick={() =>
-                  toggleFavorite(c._id)
-                }
-              >
-                ⭐
-              </button>
+              <button onClick={() => toggleFavorite(c._id)}>⭐</button>
 
-              <button
-                className="delete"
-                onClick={() =>
-                  deleteContact(c._id)
-                }
-              >
+              <button className="delete" onClick={() => deleteContact(c._id)}>
                 ❌
               </button>
             </div>

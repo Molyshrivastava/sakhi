@@ -12,7 +12,7 @@ function WhatsAppGroup() {
       { groupLink: link },
       {
         headers: { Authorization: `Bearer ${token}` },
-      }
+      },
     );
 
     toast.success("Group saved!");
@@ -27,9 +27,7 @@ function WhatsAppGroup() {
         onChange={(e) => setLink(e.target.value)}
       />
 
-      <button onClick={saveGroup}>
-        Save Group
-      </button>
+      <button onClick={saveGroup}>Save Group</button>
     </div>
   );
 }

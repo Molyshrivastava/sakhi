@@ -28,12 +28,9 @@ function AISafetyAssistant() {
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/ai/chat",
-        {
-          message: userInput,
-        }
-      );
+      const res = await axios.post("http://localhost:5000/api/ai/chat", {
+        message: userInput,
+      });
 
       setMessages((prev) => [
         ...prev,
@@ -59,42 +56,37 @@ function AISafetyAssistant() {
 
   return (
     <div className="chat-container">
-     <div className="chat-box">
-  {messages.map((msg, index) => (
-    <div
-      key={index}
-      className={`message ${msg.type}`}
-    >
-      {msg.text}
-    </div>
-  ))}
+      <div className="chat-box">
+        {messages.map((msg, index) => (
+          <div key={index} className={`message ${msg.type}`}>
+            {msg.text}
+          </div>
+        ))}
 
-  {loading && (
-    <div className="message bot">
-      💜 Sakhi AI is thinking...
-    </div>
-  )}
-</div>
+        {loading && (
+          <div className="message bot">💜 Sakhi AI is thinking...</div>
+        )}
+      </div>
 
-<div className="quick-actions">
-  <button onClick={() => setInput("Someone is following me")}>
-    🚶 Someone is following me
-  </button>
+      <div className="quick-actions">
+        <button onClick={() => setInput("Someone is following me")}>
+          🚶 Someone is following me
+        </button>
 
-  <button onClick={() => setInput("I need to go home safely")}>
-    🛣 Safe Route
-  </button>
+        <button onClick={() => setInput("I need to go home safely")}>
+          🛣 Safe Route
+        </button>
 
-  <button onClick={() => setInput("I'm feeling anxious")}>
-    💜 Emotional Support
-  </button>
+        <button onClick={() => setInput("I'm feeling anxious")}>
+          💜 Emotional Support
+        </button>
 
-  <button onClick={() => setInput("Nearest police station")}>
-    🚓 Nearby Police
-  </button>
-</div>
+        <button onClick={() => setInput("Nearest police station")}>
+          🚓 Nearby Police
+        </button>
+      </div>
 
-<div className="input-box">
+      <div className="input-box">
         <input
           value={input}
           placeholder="Ask Sakhi AI..."
@@ -106,10 +98,7 @@ function AISafetyAssistant() {
           }}
         />
 
-       <button
-  onClick={sendMessage}
-  disabled={loading}
->
+        <button onClick={sendMessage} disabled={loading}>
           Send
         </button>
       </div>

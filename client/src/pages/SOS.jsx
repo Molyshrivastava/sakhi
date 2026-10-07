@@ -4,14 +4,14 @@ import "../styles/sos.css";
 import SOSPolice from "./SOSPolice";
 import toast from "react-hot-toast";
 function SOS() {
-  const [mode, setMode] = useState("idle"); 
+  const [mode, setMode] = useState("idle");
   // idle | countdown | sending | active | error
 
   const [count, setCount] = useState(5);
   const intervalRef = useRef(null);
   const audioRef = useRef(null);
-const [sosId, setSosId] = useState(null);
-const locationInterval = useRef(null);
+  const [sosId, setSosId] = useState(null);
+  const locationInterval = useRef(null);
   // 🚨 START SOS COUNTDOWN
   const startSOS = () => {
     setMode("countdown");
@@ -37,113 +37,109 @@ const locationInterval = useRef(null);
   };
 
   // 🚨 CANCEL SOS
-const cancelSOS = async () => {
-  clearInterval(intervalRef.current);
-  clearInterval(locationInterval.current);
+  const cancelSOS = async () => {
+    clearInterval(intervalRef.current);
+    clearInterval(locationInterval.current);
 
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  if (sosId) {
-    try {
-      await axios.put(
-        "http://localhost:5000/api/sos/stop",
-        {
-          sosId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  setMode("idle");
-  setCount(5);
-  setSosId(null);
-
-  if (audioRef.current) {
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
-  }
-};
-
-  // 🚨 MAIN SOS FUNCTION
-const triggerSOS = async () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-   
-    toast.error("Please login first");
-    return;
-  }
-
-  setMode("sending");
-
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
+    if (sosId) {
       try {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        const res = await axios.post(
-          
-          "http://localhost:5000/api/sos/trigger",
+        await axios.put(
+          "http://localhost:5000/api/sos/stop",
           {
-            latitude,
-            longitude,
+            sosId,
           },
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
-setSosId(res.data.sosId);
-
-        console.log(res.data);
-
-        setMode("active");
-        locationInterval.current = setInterval(() => {
-  navigator.geolocation.getCurrentPosition(async (position) => {
-    try {
-      await axios.put(
-        "http://localhost:5000/api/sos/update-location",
-        {
-          sosId: res.data.sosId,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
           },
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  });
-}, 10000);
+        );
       } catch (err) {
         console.log(err);
-        setMode("error");
       }
-    },
-    () => {
-     
-      toast.error("Location permission denied");
-      setMode("idle");
     }
-  );
-};
+
+    setMode("idle");
+    setCount(5);
+    setSosId(null);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  };
+
+  // 🚨 MAIN SOS FUNCTION
+  const triggerSOS = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Please login first");
+      return;
+    }
+
+    setMode("sending");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          const res = await axios.post(
+            "http://localhost:5000/api/sos/trigger",
+            {
+              latitude,
+              longitude,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+          setSosId(res.data.sosId);
+
+          console.log(res.data);
+
+          setMode("active");
+          locationInterval.current = setInterval(() => {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+              try {
+                await axios.put(
+                  "http://localhost:5000/api/sos/update-location",
+                  {
+                    sosId: res.data.sosId,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                  },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  },
+                );
+              } catch (err) {
+                console.log(err);
+              }
+            });
+          }, 10000);
+        } catch (err) {
+          console.log(err);
+          setMode("error");
+        }
+      },
+      () => {
+        toast.error("Location permission denied");
+        setMode("idle");
+      },
+    );
+  };
 
   return (
     <div className="sos-container">
-
       {/* 🔊 AUDIO */}
       <audio ref={audioRef}>
         <source src="/siren.mp3" type="audio/mp3" />
@@ -183,67 +179,66 @@ setSosId(res.data.sosId);
       )}
 
       {/* ✅ SUCCESS */}
-     {mode === "active" && (
-  <div className="sos-overlay active">
-    <h1>🚨 SOS SENT SUCCESSFULLY</h1>
+      {mode === "active" && (
+        <div className="sos-overlay active">
+          <h1>🚨 SOS SENT SUCCESSFULLY</h1>
 
-    <p>Your trusted contacts have been notified.</p>
-    <p>📍 Your live location is being shared.</p>
+          <p>Your trusted contacts have been notified.</p>
+          <p>📍 Your live location is being shared.</p>
 
-    <div className="emergency-contacts">
+          <div className="emergency-contacts">
+            <h3>Emergency Helplines</h3>
 
-      <h3>Emergency Helplines</h3>
+            <div className="contact-item">
+              <span>🚨 National Emergency (112)</span>
+              <a href="tel:112" className="call-btn">
+                📞 CALL NOW
+              </a>
+            </div>
 
-      <div className="contact-item">
-        <span>🚨 National Emergency (112)</span>
-       <a href="tel:112" className="call-btn">
-    📞 CALL NOW
-</a>
-      </div>
+            <div className="contact-item">
+              <span>👮 Police (100)</span>
+              <a href="tel:112" className="call-btn">
+                📞 CALL NOW
+              </a>
+            </div>
 
-      <div className="contact-item">
-        <span>👮 Police (100)</span>
-       <a href="tel:112" className="call-btn">
-    📞 CALL NOW
-</a>
-      </div>
+            <div className="contact-item">
+              <span>🚺 Women's Helpline (1091)</span>
+              <a href="tel:112" className="call-btn">
+                📞 CALL NOW
+              </a>
+            </div>
 
-      <div className="contact-item">
-        <span>🚺 Women's Helpline (1091)</span>
-       <a href="tel:112" className="call-btn">
-    📞 CALL NOW
-</a>
-      </div>
+            <div className="contact-item">
+              <span>🚑 Ambulance (108)</span>
+              <a href="tel:112" className="call-btn">
+                📞 CALL NOW
+              </a>
+            </div>
 
-      <div className="contact-item">
-        <span>🚑 Ambulance (108)</span>
-        <a href="tel:112" className="call-btn">
-    📞 CALL NOW
-</a>
-      </div>
-
-      <div className="contact-item">
-        <span>🔥 Fire Brigade (101)</span>
-       <a href="tel:112" className="call-btn">
-    📞 CALL NOW
-</a>
-      </div>
-
-    </div>
-<p
-style={{
-marginTop:"20px",
-fontWeight:"600",
-color:"#fff"
-}}
->
-⚠️ Press <strong>STOP ALERT</strong> to stop sharing your live location with your trusted contacts.
-</p>
-    <button className="cancel" onClick={cancelSOS}>
-      STOP ALERT
-    </button>
-  </div>
-)}
+            <div className="contact-item">
+              <span>🔥 Fire Brigade (101)</span>
+              <a href="tel:112" className="call-btn">
+                📞 CALL NOW
+              </a>
+            </div>
+          </div>
+          <p
+            style={{
+              marginTop: "20px",
+              fontWeight: "600",
+              color: "#fff",
+            }}
+          >
+            ⚠️ Press <strong>STOP ALERT</strong> to stop sharing your live
+            location with your trusted contacts.
+          </p>
+          <button className="cancel" onClick={cancelSOS}>
+            STOP ALERT
+          </button>
+        </div>
+      )}
 
       {/* ❌ ERROR */}
       {mode === "error" && (
@@ -256,7 +251,6 @@ color:"#fff"
           </button>
         </div>
       )}
-
     </div>
   );
 }

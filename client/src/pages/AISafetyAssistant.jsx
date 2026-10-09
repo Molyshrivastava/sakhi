@@ -2,6 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import "../styles/chat.css";
 
+// Set VITE_API_URL in client/.env to point somewhere else (optional).
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function AISafetyAssistant() {
   const [messages, setMessages] = useState([
     {
@@ -21,6 +24,12 @@ function AISafetyAssistant() {
       text: input,
     };
 
+    // Earlier messages, so the AI remembers the conversation.
+    const history = messages.map((m) => ({
+      role: m.type === "user" ? "user" : "assistant",
+      text: m.text,
+    }));
+
     setMessages((prev) => [...prev, userMessage]);
 
     const userInput = input;
@@ -28,9 +37,21 @@ function AISafetyAssistant() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/ai/chat", {
-        message: userInput,
-      });
+      // The AI now needs you to be logged in.
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        `${API}/api/ai/chat`,
+        {
+          message: userInput,
+          history,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       setMessages((prev) => [
         ...prev,
@@ -42,13 +63,13 @@ function AISafetyAssistant() {
     } catch (err) {
       console.log(err);
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: "bot",
-          text: "Sorry, I couldn't connect to the AI server.",
-        },
-      ]);
+      const text =
+        err.response?.status === 401
+          ? "Your session has expired. Please log out and log in again."
+          : err.response?.data?.message ||
+            "Sorry, I couldn't connect to the AI server.";
+
+      setMessages((prev) => [...prev, { type: "bot", text }]);
     }
 
     setLoading(false);

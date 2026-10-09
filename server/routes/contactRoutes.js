@@ -10,28 +10,12 @@ const {
   toggleFavorite,
 } = require("../controllers/contactController");
 
-router.post(
-  "/add",
-  verifyToken,
-  addContact
-);
+router.post("/add", verifyToken, addContact);
 
-router.get(
-  "/",
-  verifyToken,
-  getContacts
-);
+router.get("/", verifyToken, getContacts);
 
-router.delete(
-  "/:id",
-  verifyToken,
-  deleteContact
-);
+router.delete("/:id", verifyToken, deleteContact);
 
-router.patch(
-  "/favorite/:id",
-  verifyToken,
-  toggleFavorite
-);
+router.patch("/favorite/:id", verifyToken, toggleFavorite);
 
 module.exports = router;

@@ -2,6 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import toast from "react-hot-toast";
+
+// Set VITE_API_URL in client/.env to point somewhere else (optional).
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function Login({ setUser, setShowLogin }) {
   const [form, setForm] = useState({
     email: "",
@@ -13,11 +17,12 @@ function Login({ setUser, setShowLogin }) {
   };
 
   const handleLogin = async () => {
+    if (!form.email || !form.password) {
+      return toast.error("Please enter your email and password.");
+    }
+
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/users/login",
-        form,
-      );
+      const res = await axios.post(`${API}/api/users/login`, form);
 
       setUser(res.data.user);
 
@@ -36,9 +41,12 @@ function Login({ setUser, setShowLogin }) {
 
       toast.success("Login successful!");
     } catch (err) {
-  console.log("JWT ERROR:", err.message);
-  return res.status(403).json("Invalid token");
-}
+      // Show the server's message (e.g. "Invalid email or password.")
+      toast.error(
+        err.response?.data?.message ||
+          "Could not log in. Check your connection and try again.",
+      );
+    }
   };
 
   return (

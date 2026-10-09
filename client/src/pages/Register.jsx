@@ -2,6 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import "../styles/Login.css";
 import toast from "react-hot-toast";
+
+// Set VITE_API_URL in client/.env to point somewhere else (optional).
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function Register({ setShowLogin }) {
   const [form, setForm] = useState({
     name: "",
@@ -22,28 +26,29 @@ function Register({ setShowLogin }) {
       return toast.error("Please fill all fields.");
     }
 
+    if (form.password.length < 8) {
+      return toast.error("Password must be at least 8 characters.");
+    }
+
     if (form.password !== form.confirmPassword) {
       return toast.error("Passwords do not match.");
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/users/register", {
+      const res = await axios.post(`${API}/api/users/register`, {
         name: form.name,
         email: form.email,
         password: form.password,
       });
 
-      console.log("REGISTER SUCCESS:", res.data);
-
       toast.success(res.data.message || "Registration successful");
       setShowLogin(true);
     } catch (err) {
-      console.log("REGISTER ERROR:", err);
-      console.log("MESSAGE:", err.message);
-      console.log("RESPONSE:", err.response);
-      console.log("REQUEST:", err.request);
-
-      toast.error(err.message || "Registration failed");
+      // Show the server's message (e.g. "User already exists")
+      toast.error(
+        err.response?.data?.message ||
+          "Registration failed. Check your connection and try again.",
+      );
     }
   };
 
@@ -90,7 +95,7 @@ function Register({ setShowLogin }) {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Password (min 8 characters)"
           value={form.password}
           onChange={handleChange}
         />
